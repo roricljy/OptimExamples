@@ -34,7 +34,7 @@ def newton_method(x, y, learning_rate=0.9, num_iterations=100):
     b = 1.0
     c = 1.0
 
-    for _ in range(num_iterations):
+    for iter in range(num_iterations):
         gradients, H = compute_gradient_hessian(x, y, a, b, c)
 
         # Update parameters using Newton's method
@@ -42,6 +42,26 @@ def newton_method(x, y, learning_rate=0.9, num_iterations=100):
         a -= learning_rate * delta[0]
         b -= learning_rate * delta[1]
         c -= learning_rate * delta[2]
+
+        # Print loss
+        loss = np.sum((a*x + b*y + c)**2/(a**2 + b**2))
+        print(f"Iter={iter}: loss = {loss}")
+
+        # Plotting the data points and the fitted line
+        plt.scatter(x, y, color='blue', label='Data points')
+
+        # Calculate fitted line points
+        x_vals = np.linspace(min(x), max(x), 100)
+        y_vals = -(a * x_vals + c) / b
+
+        plt.plot(x_vals, y_vals, color='red', label='Fitted line')
+        plt.xlim(0, 6)
+        plt.xlabel('x')
+        plt.ylabel('y')
+        plt.legend()
+        plt.title('Line Fitting using Gradient Descent')
+        plt.pause(0.1)
+        plt.clf()
 
     return a, b, c
 

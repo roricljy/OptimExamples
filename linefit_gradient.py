@@ -2,7 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 # Gradient descent function to fit a line ax + by + c = 0
-def gradient_descent(x, y, learning_rate=0.01, num_iterations=1000):
+def gradient_descent(x, y, learning_rate=0.01, num_iterations=100):
     # Number of data points
     m = len(x)
     
@@ -11,7 +11,7 @@ def gradient_descent(x, y, learning_rate=0.01, num_iterations=1000):
     b = 1.0
     c = 1.0
 
-    for _ in range(num_iterations):
+    for iter in range(num_iterations):
         # Compute the common denominator d
         d = (a**2 + b**2)
         
@@ -24,6 +24,26 @@ def gradient_descent(x, y, learning_rate=0.01, num_iterations=1000):
         a -= learning_rate * da
         b -= learning_rate * db
         c -= learning_rate * dc
+
+        # Print loss
+        loss = np.sum((a*x + b*y + c)**2/(a**2 + b**2))
+        print(f"Iter={iter}: loss = {loss}")
+
+        # Plotting the data points and the fitted line
+        plt.scatter(x, y, color='blue', label='Data points')
+
+        # Calculate fitted line points
+        x_vals = np.linspace(min(x), max(x), 100)
+        y_vals = -(a * x_vals + c) / b
+
+        plt.plot(x_vals, y_vals, color='red', label='Fitted line')
+        plt.xlim(0, 6)
+        plt.xlabel('x')
+        plt.ylabel('y')
+        plt.legend()
+        plt.title('Line Fitting using Gradient Descent')
+        plt.pause(0.1)
+        plt.clf()
     
     return a, b, c
 
