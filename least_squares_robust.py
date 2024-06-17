@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 def cauchy_weight(residual, c):
     return 1.0 / (1.0 + (residual / c)**2)
 
-def fit_quadratic_surface_robust(image, c, iterations=10):
+def fit_quadratic_surface_robust(image, c, iterations=2):
     rows, cols = image.shape
     X, Y = np.meshgrid(np.arange(cols), np.arange(rows))
     Z = image
@@ -22,7 +22,7 @@ def fit_quadratic_surface_robust(image, c, iterations=10):
     coeffs, _, _, _ = np.linalg.lstsq(A, B, rcond=None)
 
     # Iterative reweighted least squares
-    for _ in range(iterations):
+    for itr in range(iterations):
         residuals = A @ coeffs - B
         
         weights = cauchy_weight(residuals, c)
@@ -32,10 +32,30 @@ def fit_quadratic_surface_robust(image, c, iterations=10):
         Bw = A.T @ W @ Z_flat
         coeffs = np.linalg.solve(Aw, Bw)
 
-    # Create the background model
-    background = (coeffs[0] * X**2 + coeffs[1] * Y**2 +
-                  coeffs[2] * X * Y + coeffs[3] * X +
-                  coeffs[4] * Y + coeffs[5])
+        # Create the background model
+        background = (coeffs[0] * X**2 + coeffs[1] * Y**2 +
+                      coeffs[2] * X * Y + coeffs[3] * X +
+                      coeffs[4] * Y + coeffs[5])
+                      
+        residual = background.astype(np.float32) - image.astype(np.float32)
+        residual = np.clip(residual, 0, 255).astype(np.uint8)
+        _, binarized = cv2.threshold(residual, 0, 255, cv2.THRESH_BINARY | cv2.THRESH_OTSU)                      
+                      
+        # Plot the intermediate result
+        plt.subplot(2, 2, 1)
+        plt.title(f'Iteration: #{itr + 1}')
+        plt.imshow(image, cmap='gray')        
+        plt.subplot(2, 2, 2)
+        plt.title('Background')
+        plt.imshow(background, cmap='gray')
+        plt.subplot(2, 2, 3)
+        plt.title('Residual Image')
+        plt.imshow(residual, cmap='gray')
+        plt.subplot(2, 2, 4)
+        plt.title('Binary Image')
+        plt.imshow(binarized, cmap='gray')
+        plt.pause(0.5)
+        plt.clf()
 
     return background
 
@@ -46,6 +66,9 @@ def main(image_path):
         print("Error: Could not open or find the image!")
         return
 
+    # Initialize display
+    plt.figure(figsize=(6, 6))
+
     # Fit and remove the background
     c = 2.3849  # Cauchy function parameter
     background = fit_quadratic_surface_robust(image, c)
@@ -53,8 +76,7 @@ def main(image_path):
     residual = np.clip(residual, 0, 255).astype(np.uint8)
     _, binarized = cv2.threshold(residual, 0, 255, cv2.THRESH_BINARY | cv2.THRESH_OTSU)
 
-    # Display results
-    plt.figure(figsize=(6, 6))
+    # Display final results
     plt.subplot(2, 2, 1)
     plt.title('Original Image')
     plt.imshow(image, cmap='gray')
