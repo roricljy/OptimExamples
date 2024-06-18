@@ -38,7 +38,12 @@ def newton_method(x, y, learning_rate=0.9, num_iterations=100):
         gradients, H = compute_gradient_hessian(x, y, a, b, c)
 
         # Update parameters using Newton's method
-        delta = np.linalg.solve(H + np.eye(3) * 0.01, gradients)
+        eigvals, eigvecs = np.linalg.eigh(H)
+        H_abs = eigvecs @ np.diag(np.abs(eigvals)) @ eigvecs.T
+        delta = np.linalg.solve(H, gradients)       # Newton's method
+        #delta = np.linalg.solve(H_abs, gradients)   # Saddle-free Newton
+        #delta = np.linalg.solve(H + np.eye(3) * 0.01, gradients) # Saddle-free + Damping
+
         a -= learning_rate * delta[0]
         b -= learning_rate * delta[1]
         c -= learning_rate * delta[2]
