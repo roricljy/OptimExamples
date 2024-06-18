@@ -15,8 +15,8 @@ def click_event(event, x, y, flags, param):
         cv2.imshow("Image", image)
 
 # Gauss-Newton to fit sine function: y = a sin(bx + c) + d
-# defults: learning_rate=0.1, dampling=10
-def gauss_newton_sinefit(points, learning_rate=0.1, damping=10, tolerance=1e-12, max_iter=10000):
+# defults: learning_rate=0.1, dampling=1
+def gauss_newton_sinefit(points, learning_rate=0.1, damping=1.0, tolerance=1e-12, max_iter=10000):
     # data points
     points_array = np.array(points)
     x, y = points_array[:, 0], points_array[:, 1]
@@ -35,9 +35,9 @@ def gauss_newton_sinefit(points, learning_rate=0.1, damping=10, tolerance=1e-12,
                        a*np.cos(b*x+c)*x,
                        a*np.cos(b*x+c),
                        np.ones(len(x))]).T        
-        delta = np.linalg.lstsq(J, res, rcond=None)[0]
-        #delta = np.linalg.pinv( J.T @ J + np.eye(len(params))*damping) @ J.T @ res
-        #delta = np.linalg.pinv( J.T @ J + np.diag(np.diag( J.T @ J))*damping) @ J.T @ res
+        delta = np.linalg.lstsq(J, res, rcond=None)[0]                                      # Gauss-Newton
+        #delta = np.linalg.pinv( J.T @ J + np.eye(len(params))*damping) @ J.T @ res         # Levenberg
+        #delta = np.linalg.pinv( J.T @ J + np.diag(np.diag( J.T @ J))*damping) @ J.T @ res  # LM
         params -= learning_rate * delta
         if np.linalg.norm(delta) < tolerance:
             break

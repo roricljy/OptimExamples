@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 def cauchy_weight(residual, c):
     return 1.0 / (1.0 + (residual / c)**2)
 
-def fit_quadratic_surface_robust(image, c, iterations=2):
+def fit_quadratic_surface_robust(image, c, iterations=20):
     rows, cols = image.shape
     X, Y = np.meshgrid(np.arange(cols), np.arange(rows))
     Z = image
