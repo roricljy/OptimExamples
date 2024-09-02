@@ -42,7 +42,7 @@ def newton_method(x, y, learning_rate=0.9, num_iterations=100):
         H_abs = eigvecs @ np.diag(np.abs(eigvals)) @ eigvecs.T
         delta = np.linalg.solve(H, gradients)                      # Newton's method
         #delta = np.linalg.solve(H_abs, gradients)                 # Saddle-free Newton
-        #delta = np.linalg.solve(H + np.eye(3) * 0.01, gradients)  # Saddle-free + Damping
+        #delta = np.linalg.solve(H_abs + np.eye(3) * 0.01, gradients)  # Saddle-free + Damping
 
         a -= learning_rate * delta[0]
         b -= learning_rate * delta[1]
