@@ -2,7 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 # Gradient descent function to fit a line ax + by + c = 0
-def gradient_descent(x, y, learning_rate=0.9, num_iterations=100):
+def gradient_descent(x, y, learning_rate=0.01, num_iterations=100):
     # Initial parameters a, b, c
     a = 1.0
     b = 1.0
