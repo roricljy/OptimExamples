@@ -4,31 +4,29 @@ import matplotlib.pyplot as plt
 # Function to compute gradient and Hessian of the objective function
 # J = sum{(ax + by + c)^2/(a^2 + b^2)}
 def compute_gradient_hessian(x, y, a, b, c):
-    m = len(x)
-
-    # Compute the common numerator r and denominator d
-    r = a*x + b*y + c
+    # Compute the common numerator L and denominator d
+    L = a*x + b*y + c
     d = a**2 + b**2
 
     # Compute the gradients
-    da = (2/m) * np.sum(r * (x * d - a * r) / d**2)
-    db = (2/m) * np.sum(r * (y * d - b * r) / d**2)
-    dc = (2/m) * np.sum(r / d)
+    da = 2 * np.sum(L * (x * d - a * L) / d**2)
+    db = 2 * np.sum(L * (y * d - b * L) / d**2)
+    dc = 2 * np.sum(L / d)
     G = np.array([da, db, dc])
 
     # Compute the Hessian    
     H = np.zeros((3, 3))
-    H[0, 0] = (2/m) * np.sum((x**2)/d - (r**2)/d**2 + 4*(a**2)*(r**2)/d**3 - (4*a*x*r)/d**2)
-    H[0, 1] = H[1, 0] = (2/m) * np.sum((x*y)/d - (2*a*y*r)/d**2 - (2*b*x*r)/d**2 + 4*a*b*(r**2)/d**3)
-    H[0, 2] = H[2, 0] = (2/m) * np.sum(-(x*a**2 + 2*y*a*b + 2*c*a - x*b**2)/d**2)
-    H[1, 1] = (2/m) * np.sum((y**2)/d - (r**2)/d**2 + (4*b**2)*(r**2)/d**3 - (4*b*y*r)/d**2)
-    H[1, 2] = H[2, 1] = (2/m) * np.sum(-(- y*a**2 + 2*x*a*b + y*b**2 + 2*c*b)/d**2)
-    H[2, 2] = (2/m) * np.sum(1/d)
+    H[0, 0] = 2 * np.sum((x**2)/d - (L**2)/d**2 + 4*(a**2)*(L**2)/d**3 - (4*a*x*L)/d**2)
+    H[0, 1] = H[1, 0] = 2 * np.sum((x*y)/d - (2*a*y*L)/d**2 - (2*b*x*L)/d**2 + 4*a*b*(L**2)/d**3)
+    H[0, 2] = H[2, 0] = 2 * np.sum(-(x*a**2 + 2*y*a*b + 2*c*a - x*b**2)/d**2)
+    H[1, 1] = 2 * np.sum((y**2)/d - (L**2)/d**2 + (4*b**2)*(L**2)/d**3 - (4*b*y*L)/d**2)
+    H[1, 2] = H[2, 1] = 2 * np.sum(-(-y*a**2 + 2*x*a*b + y*b**2 + 2*c*b)/d**2)
+    H[2, 2] = 2 * np.sum(1/d)
 
     return G, H
 
 # Newton's method to fit a line ax + by + c = 0
-def newton_method(x, y, learning_rate=0.9, num_iterations=100):
+def newton_method(x, y, learning_rate=0.9, num_iterations=1000):
     # Initial parameters a, b, c
     a = 1.0
     b = 1.0
@@ -41,8 +39,9 @@ def newton_method(x, y, learning_rate=0.9, num_iterations=100):
         eigvals, eigvecs = np.linalg.eigh(H)
         H_abs = eigvecs @ np.diag(np.abs(eigvals)) @ eigvecs.T
         delta = np.linalg.solve(H, gradients)                      # Newton's method
+        #delta = np.linalg.solve(H + np.eye(3) * 0.1, gradients)  # Newton + Damping
         #delta = np.linalg.solve(H_abs, gradients)                 # Saddle-free Newton
-        #delta = np.linalg.solve(H_abs + np.eye(3) * 0.01, gradients)  # Saddle-free + Damping
+        #delta = np.linalg.solve(H_abs + np.eye(3) * 0.1, gradients)  # Saddle-free + Damping
 
         a -= learning_rate * delta[0]
         b -= learning_rate * delta[1]
