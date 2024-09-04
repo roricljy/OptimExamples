@@ -48,13 +48,13 @@ criterion = nn.CrossEntropyLoss()
 #criterion = nn.nn.SmoothL1Loss()      # huber loss (M-estimator)
 #criterion = nn.TripletMarginLoss()      # triplet margin loss
 
-# basic optimizers
-#optimizer = optim.SGD(model.parameters(), lr=0.01, momentum=0.9, dampening=0, weight_decay=1e-5, nesterov=True); opt_name = f'sgd_b{batch_size_trn}'
+# optimizers
+optimizer = optim.SGD(model.parameters(), lr=0.01, momentum=0.9, dampening=0, weight_decay=1e-5, nesterov=True); opt_name = f'sgd_b{batch_size_trn}'
 #optimizer = optim.RMSprop(model.parameters(), lr=0.0001, alpha=0.99); opt_name = f'rmsprop_b{batch_size_trn}'
 #optimizer = optim.Adam(model.parameters(), lr=0.0001, betas=(0.9, 0.999), weight_decay=1e-5); opt_name = f'adam_b{batch_size_trn}'
 
 # my optimizer
-optimizer = LS(model.parameters(), max_step_size=0.5); opt_name = f'ls_b{batch_size_trn}'
+#optimizer = LS(model.parameters(), max_step_size=0.5); opt_name = f'ls_b{batch_size_trn}'
 
 # learning rate schedular
 scheduler = torch.optim.lr_scheduler.CosineAnnealingWarmRestarts(optimizer, T_0=20, eta_min=0.00001)
