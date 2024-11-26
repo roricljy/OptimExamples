@@ -43,7 +43,7 @@ def optim_sinefit(option, points, learning_rate=0.1, damping=1.0, tolerance=1e-2
 
     # Initial guess: y = a * sin(b * x + c) + d
     a = np.std(y)
-    b = 0.02/gscale
+    b = estimate_hz(x, y)
     c = 0
     d = np.mean(y)
     params = np.array([a, b, c, d])
@@ -82,7 +82,7 @@ def optim_sinefit(option, points, learning_rate=0.1, damping=1.0, tolerance=1e-2
 
 def plot_sine(params, points, msg):
     a, b, c, d = params
-    x = np.linspace(0, 640*gscale, 640*gscale)
+    x = np.linspace(0, 853*gscale, 853*gscale)
     y = a * np.sin(b * x + c) + d
     canvas.delete("all")
     for i in range(1, len(x)):
@@ -103,11 +103,21 @@ def fit_sine_curve():
     params_est3 = optim_sinefit(3, points, learning_rate=0.1, damping=1.0)    
     print(f"Fitted Parameters (LM): {params_est3}")
 
+def estimate_hz(x, y):
+    my = np.mean(y)
+    n_cross = 0
+    for i in range(1, len(y)):
+        if (y[i-1]>my and y[i]<=my) or (y[i-1]<my and y[i]>=my):
+            n_cross = n_cross + 1
+    x_interval = np.max(x) - np.min(x)
+    period = x_interval / (n_cross*0.5)
+    return 2*math.pi / period
+
 # Tkinter GUI setup
 root = Tk()
 root.title("Sine Curve Fitting")
 
-canvas = Canvas(root, width=640*gscale, height=480*gscale, bg="black")
+canvas = Canvas(root, width=853*gscale, height=480*gscale, bg="black")
 canvas.pack()
 canvas.bind("<Button-1>", click_event)
 root.bind("<Key>", key_event)
