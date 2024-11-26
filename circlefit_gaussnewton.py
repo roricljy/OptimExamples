@@ -42,9 +42,9 @@ estimated_params = gauss_newton_progress(x_data, y_data, initial_guess)
 xc_est, yc_est, r_est = estimated_params
 
 # Animation setup
-fig, ax = plt.subplots(figsize=(6, 6))
-ax.scatter(x_data, y_data, label='Data Points')
-circle_line, = ax.plot([], [], 'r-', label='Estimated Circle')
+fig, ax = plt.subplots(figsize=(10, 10))
+ax.scatter(x_data, y_data, s=100, label='Data Points')
+circle_line, = ax.plot([], [], 'r-', linewidth=4, label='Estimated Circle')
 point, = ax.plot([], [], 'ro')
 ax.set_xlabel('x')
 ax.set_ylabel('y')

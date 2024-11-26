@@ -119,6 +119,8 @@ def process_points():
                 new_image[y, x] = image[yd, xd]
 
     # Show corrected image
+    dpi = 200
+    plt.figure(figsize=(width/dpi, height/dpi), dpi=dpi)
     plt.imshow(new_image)
     plt.title("Corrected Image")
     plt.axis('off')
