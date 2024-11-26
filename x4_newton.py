@@ -1,6 +1,8 @@
 import numpy as np
 import matplotlib.pyplot as plt
-plt.rcParams.update({'font.size': 14})
+import os
+gscale = 2 if "ANDROID_STORAGE" in os.environ else 1
+plt.rcParams.update({'font.size': 14*gscale})
 
 # Define the function and its derivative
 def f(x):
@@ -27,8 +29,8 @@ x_values = [x]  # Store x values for plotting
 x_plot = np.linspace(-2, 2, 400)
 y_plot = f(x_plot)
 
-fig, ax = plt.subplots(figsize=(10, 6))
-ax.plot(x_plot, y_plot, label='y = x^4', color='blue')
+fig, ax = plt.subplots(figsize=(10*gscale, 7*gscale))
+ax.plot(x_plot, y_plot, label='y = x^4', linewidth=3*gscale, color='blue')
 ax.set_xlabel('x')
 ax.set_ylabel('y')
 ax.set_title('Newton\'s method: y = x^4')
@@ -40,8 +42,8 @@ for itr in range(config.term_max_iter):
     
     # Plot the current step
     bkg=dict(facecolor="white", edgecolor="white", boxstyle="round,pad=0")
-    ax.text(0.4, 0.5, f"Iteration {itr}", transform=ax.transAxes, fontsize=20, color="black", bbox=bkg)
-    ax.scatter(x_values, [f(x) for x in x_values], color='red', marker='x', s=100)
+    ax.text(0.4, 0.5, f"Iteration {itr}", transform=ax.transAxes, fontsize=20*gscale, color="black", bbox=bkg)
+    ax.scatter(x_values, [f(x) for x in x_values], color='red', marker='x', s=100*gscale)
     plt.pause(0.1)
     
     # Check the tolerance terminal condition

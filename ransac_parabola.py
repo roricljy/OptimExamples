@@ -1,5 +1,8 @@
 import numpy as np
 import matplotlib.pyplot as plt
+import os
+gscale = 2 if "ANDROID_STORAGE" in os.environ else 1
+plt.rcParams.update({'font.size': 14*gscale})
 
 # Data generation
 outlier_ratio = 0.7
@@ -37,7 +40,8 @@ A2 = A[in_k]
 p = np.linalg.pinv(A2).dot(y[in_k])  # final model
 
 # Drawing
-plt.plot(x0, A0.dot(p), 'r', linewidth=4, label='Fitted curve')
-plt.plot(x, y, '*b', label='Data points')
+plt.figure(figsize=(7*gscale, 7*gscale))
+plt.plot(x0, A0.dot(p), 'r', linewidth=3*gscale, label='Fitted curve')
+plt.plot(x, y, '*b', markersize=6*gscale, label='Data points')
 plt.legend()
 plt.show()

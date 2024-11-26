@@ -3,10 +3,7 @@ import time
 import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
 import os
-gscale = 1
-if "ANDROID_STORAGE" in os.environ:
-    gscale = 2
-
+gscale = 2 if "ANDROID_STORAGE" in os.environ else 1
 plt.rcParams.update({'font.size': 14*gscale})
 
 # Gauss-Newton method to fit a circle: (x - a)^2 + (y - b)^2 = c^2

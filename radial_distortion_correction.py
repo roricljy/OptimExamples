@@ -2,7 +2,9 @@ import numpy as np
 import math
 import matplotlib.pyplot as plt
 from tkinter import Tk, Canvas, Button, filedialog
-plt.rcParams.update({'font.size': 14})
+import os
+gscale = 2 if "ANDROID_STORAGE" in os.environ else 1
+plt.rcParams.update({'font.size': 14*gscale})
 
 # Global variables
 points = []
@@ -119,8 +121,7 @@ def process_points():
                 new_image[y, x] = image[yd, xd]
 
     # Show corrected image
-    dpi = 200
-    plt.figure(figsize=(width/dpi, height/dpi), dpi=dpi)
+    plt.figure(figsize=(7*gscale*width/height, 7*gscale))
     plt.imshow(new_image)
     plt.title("Corrected Image")
     plt.axis('off')

@@ -1,6 +1,8 @@
 import numpy as np
 import matplotlib.pyplot as plt
-plt.rcParams.update({'font.size': 14})
+import os
+gscale = 2 if "ANDROID_STORAGE" in os.environ else 1
+plt.rcParams.update({'font.size': 14*gscale})
 
 # Generate data
 x = np.arange(1, 101)
@@ -13,6 +15,10 @@ A = np.vstack([x**2, x, np.ones(len(x))]).T
 # Initialize the solution (Least Squares method)
 p = np.linalg.pinv(A) @ y
 
+# Init display
+plt.figure(figsize=(7*gscale, 7*gscale))
+plt.pause(0.1)
+
 # Iterative algorithm
 for itr in range(15):
     r = A @ p - y
@@ -22,12 +28,12 @@ for itr in range(15):
     # Plot the data and the fitted curve
     bkg=dict(facecolor="white", edgecolor="white", boxstyle="round,pad=0")
     plt.text(0.35, 0.5, f"Iteration {itr}", transform=plt.gca().transAxes, fontsize=20, color="black", bbox=bkg)
-    plt.plot(x, y, '*b')
-    plt.plot(x, A @ p, 'r', linewidth=4)
+    plt.plot(x, y, '*b', markersize=6*gscale)
+    plt.plot(x, A @ p, 'r', linewidth=3*gscale)
     plt.pause(0.5)
     plt.clf()
 
 # Plot the final result
-plt.plot(x, y, '*b')
-plt.plot(x, A @ p, 'r', linewidth=4)
+plt.plot(x, y, '*b', markersize=6*gscale)
+plt.plot(x, A @ p, 'r', linewidth=3*gscale)
 plt.show()

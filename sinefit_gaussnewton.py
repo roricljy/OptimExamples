@@ -1,8 +1,9 @@
 import numpy as np
 import math
 import time
-import matplotlib.pyplot as plt
 from tkinter import Tk, Canvas, Button
+import os
+gscale = 3 if "ANDROID_STORAGE" in os.environ else 1
 
 # Global variables to store points and canvas
 points = []
@@ -14,7 +15,7 @@ def click_event(event):
     global points, canvas
     x, y = event.x, event.y
     points.append((x, y))
-    canvas.create_oval(x - 5, y - 5, x + 5, y + 5, fill="#00FF00")
+    canvas.create_oval(x - 5*gscale, y - 5*gscale, x + 5*gscale, y + 5*gscale, fill="#00FF00")
 
 def key_event(event):
     global optim_started, stop_iteration
@@ -72,15 +73,15 @@ def optim_sinefit(option, points, learning_rate=0.1, damping=1.0, tolerance=1e-2
 
 def plot_sine(params, points, msg):
     a, b, c, d = params
-    x = np.linspace(0, 640, 640)
+    x = np.linspace(0, 640*gscale, 640*gscale)
     y = a * np.sin(b * x + c) + d
     canvas.delete("all")
     for i in range(1, len(x)):
-        canvas.create_line(x[i-1], y[i-1], x[i], y[i], fill="white", width=2)
+        canvas.create_line(x[i-1], y[i-1], x[i], y[i], fill="white", width=2*gscale)
     for j in range(0, len(points)):
         x1, y1 = points[j]
-        canvas.create_oval(x1 - 5, y1 - 5, x1 + 5, y1 + 5, fill="#00FF00")
-    canvas.create_text(30, 25, text=msg, fill="white", font=("Helvetica", 24), anchor="nw")        
+        canvas.create_oval(x1 - 5*gscale, y1 - 5*gscale, x1 + 5*gscale, y1 + 5*gscale, fill="#00FF00")
+    canvas.create_text(30*gscale, 25*gscale, text=msg, fill="white", font=("Helvetica", 24*gscale), anchor="nw")
     canvas.update()
     time.sleep(0.001)
 
@@ -97,7 +98,7 @@ def fit_sine_curve():
 root = Tk()
 root.title("Sine Curve Fitting")
 
-canvas = Canvas(root, width=640, height=480, bg="black")
+canvas = Canvas(root, width=640*gscale, height=480*gscale, bg="black")
 canvas.pack()
 canvas.bind("<Button-1>", click_event)
 root.bind("<Key>", key_event)

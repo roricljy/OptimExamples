@@ -1,7 +1,9 @@
 import cv2
 import numpy as np
 import matplotlib.pyplot as plt
-plt.rcParams.update({'font.size': 14})
+import os
+gscale = 2 if "ANDROID_STORAGE" in os.environ else 1
+plt.rcParams.update({'font.size': 14*gscale})
 
 def cauchy_weight(residual, c):
     return 1.0 / (1.0 + (residual / c)**2)
@@ -43,6 +45,7 @@ def fit_quadratic_surface_robust(image, c, iterations=20):
         _, binarized = cv2.threshold(residual, 0, 255, cv2.THRESH_BINARY | cv2.THRESH_OTSU)                      
                       
         # Plot the intermediate result
+        plt.clf()
         plt.subplot(2, 2, 1)
         plt.title(f'Iteration: #{itr + 1}')
         plt.imshow(image, cmap='gray')
@@ -60,7 +63,6 @@ def fit_quadratic_surface_robust(image, c, iterations=20):
         plt.imshow(binarized, cmap='gray')
         plt.axis('off')
         plt.pause(0.1)
-        plt.clf()
 
     return background
 
@@ -72,7 +74,8 @@ def main(image_path):
         return
 
     # Initialize display
-    plt.figure(figsize=(6, 6))
+    plt.figure(figsize=(7*gscale, 7*gscale))
+    plt.pause(0.1)
 
     # Fit and remove the background
     c = 2.3849  # Cauchy function parameter
