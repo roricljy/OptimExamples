@@ -1,14 +1,16 @@
 import numpy as np
 import matplotlib.pyplot as plt
+plt.rcParams.update({'font.size': 14})
 
 # Gradient descent function to fit a line ax + by + c = 0
-def gradient_descent(x, y, learning_rate=0.01, num_iterations=100):
+def gradient_descent(x, y, learning_rate=0.01, num_iterations=300):
     # Initial parameters a, b, c
     a = 1.0
     b = 1.0
     c = 1.0
 
     for iter in range(num_iterations):
+        plt.clf()
         # Compute the common denominator d
         d = (a**2 + b**2)
         
@@ -24,9 +26,10 @@ def gradient_descent(x, y, learning_rate=0.01, num_iterations=100):
 
         # Print loss
         loss = np.sum((a*x + b*y + c)**2/(a**2 + b**2))
-        print(f"Iter={iter}: loss = {loss}")
+        bkg=dict(facecolor="white", edgecolor="white", boxstyle="round,pad=0")
+        plt.text(0.4, 0.1, f"Iter={iter}: loss = {loss:0.3f}", transform=plt.gca().transAxes, fontsize=18, color="black", bbox=bkg)    
 
-        # Plotting the data points and the fitted line
+        # Plotting the data points and the fitted line        
         plt.scatter(x, y, color='blue', label='Data points')
 
         # Calculate fitted line points
@@ -38,10 +41,9 @@ def gradient_descent(x, y, learning_rate=0.01, num_iterations=100):
         plt.xlabel('x')
         plt.ylabel('y')
         plt.legend()
-        plt.title('Line Fitting using Gradient Descent')
+        plt.title('Line Fitting: Gradient Descent')
         plt.pause(0.1)
-        plt.clf()
-    
+   
     return a, b, c
 
 # Example usage
@@ -51,19 +53,4 @@ y = np.array([2, 2, 3, 5, 4])
 
 # Run gradient descent
 a, b, c = gradient_descent(x, y)
-
-print(f"Fitted line parameters: a = {a}, b = {b}, c = {c}")
-
-# Plotting the data points and the fitted line
-plt.scatter(x, y, color='blue', label='Data points')
-
-# Calculate fitted line points
-x_vals = np.linspace(min(x), max(x), 100)
-y_vals = -(a * x_vals + c) / b
-
-plt.plot(x_vals, y_vals, color='red', label='Fitted line')
-plt.xlabel('x')
-plt.ylabel('y')
-plt.legend()
-plt.title('Line Fitting using Newton\'s Method')
 plt.show()

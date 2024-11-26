@@ -1,5 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
+plt.rcParams.update({'font.size': 14})
 
 # Generate data
 x = np.arange(1, 101)
@@ -13,18 +14,20 @@ A = np.vstack([x**2, x, np.ones(len(x))]).T
 p = np.linalg.pinv(A) @ y
 
 # Iterative algorithm
-for itr in range(10):
+for itr in range(15):
     r = A @ p - y
     W = np.diag(1 / (1 + np.abs(r) / 1.3998))
     p = np.linalg.inv(A.T @ W @ A) @ (A.T @ W @ y)
     
     # Plot the data and the fitted curve
+    bkg=dict(facecolor="white", edgecolor="white", boxstyle="round,pad=0")
+    plt.text(0.35, 0.5, f"Iteration {itr}", transform=plt.gca().transAxes, fontsize=20, color="black", bbox=bkg)
     plt.plot(x, y, '*b')
-    plt.plot(x, A @ p, 'r')
+    plt.plot(x, A @ p, 'r', linewidth=4)
     plt.pause(0.5)
     plt.clf()
 
 # Plot the final result
 plt.plot(x, y, '*b')
-plt.plot(x, A @ p, 'r')
+plt.plot(x, A @ p, 'r', linewidth=4)
 plt.show()

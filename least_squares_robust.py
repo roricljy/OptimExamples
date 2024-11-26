@@ -1,6 +1,7 @@
 import cv2
 import numpy as np
 import matplotlib.pyplot as plt
+plt.rcParams.update({'font.size': 14})
 
 def cauchy_weight(residual, c):
     return 1.0 / (1.0 + (residual / c)**2)
@@ -44,17 +45,21 @@ def fit_quadratic_surface_robust(image, c, iterations=20):
         # Plot the intermediate result
         plt.subplot(2, 2, 1)
         plt.title(f'Iteration: #{itr + 1}')
-        plt.imshow(image, cmap='gray')        
+        plt.imshow(image, cmap='gray')
+        plt.axis('off')
         plt.subplot(2, 2, 2)
         plt.title('Background')
         plt.imshow(background, cmap='gray')
+        plt.axis('off')
         plt.subplot(2, 2, 3)
         plt.title('Residual Image')
         plt.imshow(residual, cmap='gray')
+        plt.axis('off')
         plt.subplot(2, 2, 4)
         plt.title('Binary Image')
         plt.imshow(binarized, cmap='gray')
-        plt.pause(0.5)
+        plt.axis('off')
+        plt.pause(0.1)
         plt.clf()
 
     return background
@@ -80,20 +85,20 @@ def main(image_path):
     plt.subplot(2, 2, 1)
     plt.title('Original Image')
     plt.imshow(image, cmap='gray')
+    plt.axis('off')
     plt.subplot(2, 2, 2)
     plt.title('Background')
     plt.imshow(background, cmap='gray')
+    plt.axis('off')
     plt.subplot(2, 2, 3)
     plt.title('Residual Image')
     plt.imshow(residual, cmap='gray')
+    plt.axis('off')
     plt.subplot(2, 2, 4)
     plt.title('Binary Image')
     plt.imshow(binarized, cmap='gray')
+    plt.axis('off')
     plt.show()
 
 if __name__ == "__main__":
-    import sys
-    if len(sys.argv) != 2:
-        print(f"Usage: {sys.argv[0]} <image_path>")
-    else:
-        main(sys.argv[1])
+    main('sample_circle.png')

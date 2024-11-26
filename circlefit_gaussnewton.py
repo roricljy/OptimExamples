@@ -2,6 +2,7 @@ import numpy as np
 import time
 import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
+plt.rcParams.update({'font.size': 14})
 
 # Gauss-Newton method to fit a circle: (x - a)^2 + (y - b)^2 = c^2
 params_list = []
@@ -33,8 +34,8 @@ data_points += np.random.normal(scale=0.3, size=data_points.shape)  # Add noise
 x_data, y_data = data_points[:, 0], data_points[:, 1]
 
 # Initial guess
-initial_guess = np.array([3., 3., 2.])
-#initial_guess = np.array([1., 1., 1.])
+#initial_guess = np.array([3., 3., 2.])
+initial_guess = np.array([1., 1., 1.])
 
 # Circle fitting
 estimated_params = gauss_newton_progress(x_data, y_data, initial_guess)
