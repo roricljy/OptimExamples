@@ -45,10 +45,11 @@ def click_event(event):
     if len(points) < 3:
         x, y = event.x, event.y
         points.append((x, y))
-        canvas.create_oval(x - 5, y - 5, x + 5, y + 5, fill="red")
-        if len(points) == 3:
+        canvas.create_oval(x - 7*gscale, y - 7*gscale, x + 7*gscale, y + 7*gscale, fill="#00FF00")
+        canvas.update()        
+        if len(points) == 3:            
             process_points()
-
+        
 # Function to apply the radial distortion
 def apply_radial_distortion(point, center, w):
     if w == 0 or point == center:
