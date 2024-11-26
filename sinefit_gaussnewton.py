@@ -17,6 +17,15 @@ def click_event(event):
     points.append((x, y))
     canvas.create_oval(x - 5*gscale, y - 5*gscale, x + 5*gscale, y + 5*gscale, fill="#00FF00")
 
+def on_run_btn():
+    global optim_started, stop_iteration
+    if not optim_started:
+        optim_started = True
+        fit_sine_curve()
+        root.destroy()
+        return
+    stop_iteration = True
+    
 def key_event(event):
     global optim_started, stop_iteration
     if not optim_started:
@@ -81,7 +90,7 @@ def plot_sine(params, points, msg):
     for j in range(0, len(points)):
         x1, y1 = points[j]
         canvas.create_oval(x1 - 5*gscale, y1 - 5*gscale, x1 + 5*gscale, y1 + 5*gscale, fill="#00FF00")
-    canvas.create_text(30*gscale, 25*gscale, text=msg, fill="white", font=("Helvetica", 24*gscale), anchor="nw")
+    canvas.create_text(30*gscale, 25*gscale, text=msg, fill="white", font=("Helvetica", 24), anchor="nw")
     canvas.update()
     time.sleep(0.001)
 
@@ -103,4 +112,7 @@ canvas.pack()
 canvas.bind("<Button-1>", click_event)
 root.bind("<Key>", key_event)
 
+# Add button
+run_btn = Button(root, text="Run", command=on_run_btn)
+run_btn.pack()
 root.mainloop()
