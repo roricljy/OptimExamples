@@ -2,7 +2,12 @@ import numpy as np
 import time
 import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
-plt.rcParams.update({'font.size': 14})
+import os
+gscale = 1
+if "ANDROID_STORAGE" in os.environ:
+    gscale = 2
+
+plt.rcParams.update({'font.size': 14*gscale})
 
 # Gauss-Newton method to fit a circle: (x - a)^2 + (y - b)^2 = c^2
 params_list = []
@@ -42,9 +47,9 @@ estimated_params = gauss_newton_progress(x_data, y_data, initial_guess)
 xc_est, yc_est, r_est = estimated_params
 
 # Animation setup
-fig, ax = plt.subplots(figsize=(10, 10))
-ax.scatter(x_data, y_data, s=100, label='Data Points')
-circle_line, = ax.plot([], [], 'r-', linewidth=4, label='Estimated Circle')
+fig, ax = plt.subplots(figsize=(7*gscale, 7*gscale))
+ax.scatter(x_data, y_data, s=100*gscale, label='Data Points')
+circle_line, = ax.plot([], [], 'r-', linewidth=3*gscale, label='Estimated Circle')
 point, = ax.plot([], [], 'ro')
 ax.set_xlabel('x')
 ax.set_ylabel('y')
