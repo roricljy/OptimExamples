@@ -41,9 +41,9 @@ def optim_sinefit(option, points, learning_rate=0.1, damping=1.0, tolerance=1e-2
     points_array = np.array(points)
     x, y = points_array[:, 0], points_array[:, 1]
 
-    # Initial guess
+    # Initial guess: y = a * sin(b * x + c) + d
     a = np.std(y)
-    b = 0.02
+    b = 0.02/gscale
     c = 0
     d = np.mean(y)
     params = np.array([a, b, c, d])
