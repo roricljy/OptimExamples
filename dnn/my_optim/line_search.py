@@ -2,15 +2,15 @@ import torch
 from torch.optim.optimizer import Optimizer, required
 from copy import deepcopy
 
-class LS(Optimizer):
+class LineSearch(Optimizer):
 
     def __init__(self, params, lr=1.0, max_step_size=1.0, slope_modifier=1e-4, shrink_factor=0.5):
         defaults = dict(lr=lr, max_step_size=max_step_size, slope_modifier=slope_modifier, shrink_factor=shrink_factor)
-        super(LS, self).__init__(params, defaults)
+        super(LineSearch, self).__init__(params, defaults)
         self._params = self.param_groups[0]['params']
 
     def __setstate__(self, state):
-        super(LS, self).__setstate__(state)
+        super(LineSearch, self).__setstate__(state)
 
     def _gather_flat_grad(self):
         views = []

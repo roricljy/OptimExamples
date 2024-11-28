@@ -1,22 +1,18 @@
-import itertools
-from IPython.display import Image
-from IPython import display
-import matplotlib.pyplot as plt
-
 import os
 import torch
 import torch.nn as nn
-import torch.nn.functional as F
 import torch.optim as optim
 import torch.utils.data as data_utils
 from torchvision import datasets, models, transforms
+import matplotlib.pyplot as plt
 
-# load my optimizer
-from line_search_optimizer import *
+# load my optimizers & loss functions
+from my_optim.line_search import *
+from my_loss.focal_loss import *
 
 #random_seed = 1
-#torch.backends.cudnn.enabled = False
 #torch.manual_seed(random_seed)
+#torch.backends.cudnn.enabled = False
 
 os.environ["CUDA_DEVICE_ORDER"]="PCI_BUS_ID"
 os.environ["CUDA_VISIBLE_DEVICES"]= "1"
@@ -24,35 +20,36 @@ use_cuda = torch.cuda.is_available()
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
 
 # network model
-import cnn_MNIST as experim; dataset_name='mnist_cnn'; arch='cnn'; ncls=10
-#import cnn_CIFAR10 as experim; dataset_name='cifar10_cnn'; arch='cnn'; ncls=10
+import cnn_MNIST as net; dataset_name='mnist_cnn'; arch='cnn'; ncls=10
+#import cnn_CIFAR10 as net; dataset_name='cifar10_cnn'; arch='cnn'; ncls=10
 
-model = experim.TestCNN()
+model = net.TestCNN()
 if use_cuda:
     model.to(device)
 
-load_model = False
-load_optimizer = False
-save_model = False
-save_best = True
+load_model = False         # continue learning from the saved checkpoint
+save_model = False         # save model at each epoch
+save_best = True           # save best model
+show_test_result = True
 
 num_epochs = 2
 batch_size_trn = 64
 batch_size_val = 1000
 log_frequency = 10
-show_test_result = True
 
 # loss functions
 criterion = nn.CrossEntropyLoss()
-#criterion = nn.MSELoss()                  # least squares loss
-#criterion = nn.nn.SmoothL1Loss()      # huber loss (M-estimator)
-#criterion = nn.TripletMarginLoss()      # triplet margin loss
+#criterion = nn.MSELoss()              # least squares loss
+#criterion = nn.HuberLoss()            # robust to outliers (M-estimator)
+#criterion = nn.SmoothL1Loss()         # robust to outliers (M-estimator)
+#criterion = nn.TripletMarginLoss()    # triplet margin loss
+#criterion = FocalLoss(gamma=1.0)       # my loss function
 
 # optimizers
 optimizer = optim.SGD(model.parameters(), lr=0.01, momentum=0.9, dampening=0, weight_decay=1e-5, nesterov=True); opt_name = f'sgd_b{batch_size_trn}'
 #optimizer = optim.RMSprop(model.parameters(), lr=0.0001, alpha=0.99); opt_name = f'rmsprop_b{batch_size_trn}'
 #optimizer = optim.Adam(model.parameters(), lr=0.001, betas=(0.9, 0.999), weight_decay=1e-5); opt_name = f'adam_b{batch_size_trn}'
-#optimizer = LS(model.parameters(), max_step_size=0.5); opt_name = f'ls_b{batch_size_trn}'   # my optimizer
+#optimizer = LineSearch(model.parameters(), max_step_size=0.5); opt_name = f'ls_b{batch_size_trn}'   # my optimizer
 
 # learning rate schedular
 scheduler = torch.optim.lr_scheduler.CosineAnnealingWarmRestarts(optimizer, T_0=20, eta_min=0.00001)
@@ -81,7 +78,7 @@ if load_model:
 if use_cuda:
     model.to(device)
 
-trn_loader,val_loader = experim.load_data(batch_size_trn=batch_size_trn, batch_size_val=batch_size_val)
+trn_loader,val_loader = net.load_data(batch_size_trn=batch_size_trn, batch_size_val=batch_size_val)
 num_batches = len(trn_loader)
 log_interval = round(num_batches/log_frequency)
 
@@ -105,10 +102,6 @@ def evaluate(model, eval_loader):
     return loss_avg, accuracy  
 
 # train
-trn_loss_list = []
-val_loss_list = []
-batch_counter = []
-
 for epoch in range(num_epochs):
     trn_loss = 0.0
     current_epoch = epoch + last_epoch
@@ -126,8 +119,6 @@ for epoch in range(num_epochs):
             del pred        # memory issue
             return loss
 
-        #loss = closure()
-        #optimizer.step()
         loss = optimizer.step(closure)
 
         # trn loss summary
@@ -157,9 +148,6 @@ for epoch in range(num_epochs):
                     'optimizer_state_dict': optimizer.state_dict()
                     }, pth_best_path)
 
-            #trn_loss_list.append(trn_loss/log_interval)
-            #val_loss_list.append(val_loss)
-            #batch_counter.append(batch_idx + epoch*num_batches)
             trn_loss = 0.0
 
     scheduler.step()
