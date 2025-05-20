@@ -1,4 +1,5 @@
 import numpy as np
+import time
 
 # Settings
 tolerance = 1e-12
@@ -20,6 +21,7 @@ for iter in range(max_iter):
     if abs(x_new - x) < tolerance:
         break
     x = x_new
+    time.sleep(0.5)
 
 # Print the result
 print(f"The root is {x}")
