@@ -39,7 +39,7 @@ def gradient_descent(x, y, learning_rate=0.01, num_iterations=300):
         y_vals = -(a * x_vals + c) / b
 
         plt.plot(x_vals, y_vals, color='red', linewidth=3*gscale, label='Fitted line')
-        plt.xlim(0, 6)
+        plt.xlim(0, 8)
         plt.xlabel('x')
         plt.ylabel('y')
         plt.legend()
@@ -50,8 +50,8 @@ def gradient_descent(x, y, learning_rate=0.01, num_iterations=300):
 
 # Example usage
 # Sample data points
-x = np.array([1, 2, 3, 4, 5])
-y = np.array([2, 2, 3, 5, 4])
+x = np.array([1, 2, 3, 4, 5, 6, 7])
+y = np.array([2, 2, 3, 5, 4, 7, 7])
 
 # Init display
 plt.figure(figsize=(7*gscale, 7*gscale))
