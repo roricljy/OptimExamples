@@ -29,12 +29,12 @@ def Nesterov_accelerated_gradient(x, y, ax):
     bkg = dict(facecolor="white", edgecolor="white", boxstyle="round,pad=0")
     loss_text = ax.text(-1, -2, "", fontsize=18*gscale, color="black", bbox=bkg)
 
-    delta_prev = np.array([0, 0])
+    vt = np.array([0, 0])
     for iter in range(num_iterations):
-        fp_ahead = compute_fp(param + gamma * delta_prev)
+        fp_ahead = compute_fp(param - gamma * vt)
+        vt = gamma * vt + learning_rate * fp_ahead;
         param_prev = param
-        param = param + gamma * delta_prev - learning_rate * fp_ahead
-        delta_prev = param - param_prev
+        param = param - vt
 
         # Update loss display
         loss = compute_f(param[0], param[1])
