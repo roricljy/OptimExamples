@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 
 x = np.arange(1, 101)
 y = -2 * (x - 40)**2 + 30 + 100 * np.random.randn(100)
-y[50:80] += 400 * np.abs(np.arange(50, 80) - 65) - 7000
+#y[50:80] += 400 * np.abs(np.arange(50, 80) - 65) - 7000
 n = len(x)
 
 A = np.vstack([x**2, x, np.ones_like(x)]).T
