@@ -19,7 +19,7 @@ def compute_fp(param):
 # Adam optimization
 def adam_optimization(x, y, ax):
     learning_rate = 0.5
-    gamma = 0.999
+    gamma = 0.99
     epsilon = 1e-8
     num_iterations = 300
 
