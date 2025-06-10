@@ -28,26 +28,6 @@ def compute_gradient_hessian(x, y, a, b, c):
 
     return G, H
 
-# Function to compute Jacobian of the residual vector
-# ri = |axi + byi + c| / sqrt(a^2 + b^2)
-def compute_Jacobian(x, y, a, b, c):    
-    # Compute the denominator term for normalization
-    residual = a * x + b * y + c
-    sign_residual = np.sign(residual)    
-    denom = np.sqrt(a**2 + b**2)
-    denom_cubed = denom**3
-    
-    # Initialize the Jacobian matrix
-    n = len(x)
-    jacobian = np.zeros((n, 3))
-    
-    # Fill the Jacobian matrix
-    jacobian[:, 0] = (sign_residual * x * (a**2 + b**2) - np.abs(residual) * a) / denom_cubed
-    jacobian[:, 1] = (sign_residual * y * (a**2 + b**2) - np.abs(residual) * b) / denom_cubed
-    jacobian[:, 2] = sign_residual / denom                                      # Partial derivative w.r.t. c
-    
-    return jacobian
-    
 # Newton's method to fit a line ax + by + c = 0
 def newton_method(x, y, learning_rate=0.9, num_iterations=300):
     # Initial parameters a, b, c
@@ -67,11 +47,6 @@ def newton_method(x, y, learning_rate=0.9, num_iterations=300):
         #delta = np.linalg.solve(H + np.eye(3) * 0.1, gradients)  # Newton + Damping
         #delta = np.linalg.solve(H_abs, gradients)                 # Saddle-free Newton
         #delta = np.linalg.solve(H_abs + np.eye(3) * 0.1, gradients)  # Saddle-free + Damping               
-
-        # Update parameters using Gauss-Newton method
-        res = np.abs(x * a + y * b + c) / np.sqrt(a**2 + b**2)
-        J = compute_Jacobian(x, y, a, b, c)
-        #delta = np.linalg.lstsq(J, res, rcond=None)[0] # Gauss-Newton
 
         a -= learning_rate * delta[0]
         b -= learning_rate * delta[1]
