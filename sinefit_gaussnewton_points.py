@@ -123,7 +123,7 @@ canvas.bind("<Button-1>", click_event)
 root.bind("<Key>", key_event)
 
 points = [(76, 36), (74, 349), (146, 445), (276, 424), (294, 140), (360, 30), (512, 81), (535, 254), (557, 353), (642, 382), (722, 300), (756, 70)]
-points = points * gscale
+points = [(x * gscale, y * gscale) for x, y in points]
 for pt in points:
     canvas.create_oval(pt[0] - 5*gscale, pt[1] - 5*gscale, pt[0] + 5*gscale, pt[1] + 5*gscale, fill="#00FF00")
 
