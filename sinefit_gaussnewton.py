@@ -1,7 +1,7 @@
 import numpy as np
 import math
 import time
-from tkinter import Tk, Canvas, Button
+from tkinter import Tk, Canvas, Button, Frame
 import os
 gscale = 3 if "ANDROID_STORAGE" in os.environ else 1
 
@@ -22,7 +22,7 @@ def on_run_btn():
     if not optim_started:
         optim_started = True
         fit_sine_curve()
-        root.destroy()
+        optim_started = False
         return
     stop_iteration = True
     
@@ -31,9 +31,11 @@ def key_event(event):
     if not optim_started:
         optim_started = True
         fit_sine_curve()
-        root.destroy()
         return
     stop_iteration = True
+
+def on_exit_btn():
+    root.destroy()
         
 def optim_sinefit(option, points, learning_rate=0.1, damping=1.0, tolerance=1e-20, max_iter=10000):
     global canvas, stop_iteration
@@ -76,8 +78,8 @@ def optim_sinefit(option, points, learning_rate=0.1, damping=1.0, tolerance=1e-2
         plot_sine(params, points, msg)
         
         if stop_iteration:
-            return params       
-        
+            return params
+       
     return params
 
 def plot_sine(params, points, msg):
@@ -102,6 +104,9 @@ def fit_sine_curve():
     print(f"Fitted Parameters (Levenberg): {params_est2}")
     params_est3 = optim_sinefit(3, points, learning_rate=0.1, damping=1.0)    
     print(f"Fitted Parameters (LM): {params_est3}")
+    points = []
+    canvas.delete("all")
+    canvas.update()
 
 def estimate_hz(x, y):
     my = np.mean(y)
@@ -123,6 +128,11 @@ canvas.bind("<Button-1>", click_event)
 root.bind("<Key>", key_event)
 
 # Add button
-run_btn = Button(root, text="Run", command=on_run_btn)
-run_btn.pack()
+button_frame = Frame(root)
+button_frame.pack()
+run_btn = Button(button_frame, text="Run", command=on_run_btn)
+run_btn.grid(row=0, column=0, padx=5, pady=5)
+exit_btn = Button(button_frame, text="Exit", command=on_exit_btn)
+exit_btn.grid(row=0, column=1, padx=5, pady=5)
+
 root.mainloop()
