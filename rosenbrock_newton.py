@@ -28,10 +28,7 @@ def compute_fpp(param):
 # Newton optimization
 def newton_optimization(x, y, ax):
     learning_rate = 0.5
-    beta1 = 0.9
-    beta2 = 0.999
-    damping = 1e-2
-    num_iterations = 300
+    num_iterations = 50
 
     # Initial parameters
     param = np.array([-2.0, 2.0])
@@ -43,13 +40,9 @@ def newton_optimization(x, y, ax):
     for iter in range(1, num_iterations + 1):
         fp = compute_fp(param)
         fpp = compute_fpp(param)
-        eigvals, eigvecs = np.linalg.eig(fpp)
-        abs_eigvals = np.abs(eigvals)
-        D_abs = np.diag(abs_eigvals)
-        fpp_abs = eigvecs @ D_abs @ np.linalg.inv(eigvecs)
 
         # Update parameters
-        param = param - learning_rate * np.linalg.inv(fpp_abs + np.diag(fpp_abs)*damping) @ fp
+        param = param - learning_rate * np.linalg.solve(fpp, fp)
 
         # Update loss display
         loss = compute_f(param[0], param[1])
@@ -73,7 +66,7 @@ plt.xlim(-3, 3)
 plt.ylim(-3, 3)
 plt.xlabel('x')
 plt.ylabel('y')
-plt.title('Newton Optimization')
+plt.title('Newton Optimizer')
 fig.set_facecolor('white')
 ax = fig.add_subplot()
 ax.contourf(X, Y, Z, levels=256, cmap='jet')

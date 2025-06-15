@@ -55,7 +55,7 @@ def adam_optimization(x, y, ax):
 
         # Plotting current param
         ax.scatter(param[0], param[1], color='red', s=10*gscale)
-        plt.pause(0.1)
+        plt.pause(0.01)
 
     return param
 
@@ -71,7 +71,7 @@ plt.xlim(-3, 3)
 plt.ylim(-3, 3)
 plt.xlabel('x')
 plt.ylabel('y')
-plt.title('Adam Optimization')
+plt.title('Adam Optimizer')
 fig.set_facecolor('white')
 ax = fig.add_subplot()
 ax.contourf(X, Y, Z, levels=256, cmap='jet')
