@@ -7,9 +7,9 @@ from torchvision import datasets, models, transforms
 import matplotlib.pyplot as plt
 
 # load my optimizers & loss functions
-from my_optim.lion import *
-from my_optim.line_search import *
-from my_loss.focal_loss import *
+from user_optim.lion import *
+from user_optim.line_search import *
+from user_loss.focal_loss import *
 
 #random_seed = 1
 #torch.manual_seed(random_seed)
