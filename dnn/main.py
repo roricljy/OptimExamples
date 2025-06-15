@@ -7,6 +7,7 @@ from torchvision import datasets, models, transforms
 import matplotlib.pyplot as plt
 
 # load my optimizers & loss functions
+from my_optim.lion import *
 from my_optim.line_search import *
 from my_loss.focal_loss import *
 
@@ -29,7 +30,7 @@ if use_cuda:
 
 load_model = False         # continue learning from the saved checkpoint
 save_model = False         # save model at each epoch
-save_best = True           # save best model
+save_best = True            # save best model
 show_test_result = True
 
 num_epochs = 2
@@ -43,12 +44,13 @@ criterion = nn.CrossEntropyLoss()
 #criterion = nn.HuberLoss()            # robust to outliers (M-estimator)
 #criterion = nn.SmoothL1Loss()         # robust to outliers (M-estimator)
 #criterion = nn.TripletMarginLoss()    # triplet margin loss
-#criterion = FocalLoss(gamma=1.0)       # my loss function
+#criterion = FocalLoss(gamma=3.0)       # my loss function
 
 # optimizers
-optimizer = optim.SGD(model.parameters(), lr=0.01, momentum=0.9, dampening=0, weight_decay=1e-5, nesterov=True); opt_name = f'sgd_b{batch_size_trn}'
+optimizer = optim.SGD(model.parameters(), lr=0.005, momentum=0.9, dampening=0, weight_decay=1e-5, nesterov=True); opt_name = f'sgd_b{batch_size_trn}'
 #optimizer = optim.RMSprop(model.parameters(), lr=0.0001, alpha=0.99); opt_name = f'rmsprop_b{batch_size_trn}'
 #optimizer = optim.Adam(model.parameters(), lr=0.001, betas=(0.9, 0.999), weight_decay=1e-5); opt_name = f'adam_b{batch_size_trn}'
+#optimizer = Lion(model.parameters(), lr=0.0002, beta1=0.9, beta2=0.99, gamma=0.1); opt_name = f'lion_b{batch_size_trn}'
 #optimizer = LineSearch(model.parameters(), max_step_size=0.5); opt_name = f'ls_b{batch_size_trn}'   # my optimizer
 
 # learning rate schedular
@@ -73,8 +75,7 @@ if load_model:
     last_epoch = checkpoint['epoch']
     best_accuracy = checkpoint['best_accuracy']
     model.load_state_dict(checkpoint['model_state_dict'])
-    if load_optimizer:
-        optimizer.load_state_dict(checkpoint['optimizer_state_dict'])
+    optimizer.load_state_dict(checkpoint['optimizer_state_dict'])
 if use_cuda:
     model.to(device)
 
