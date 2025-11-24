@@ -41,8 +41,9 @@ def run_optimization(ax):
         fpp = compute_fpp(param[0], param[1])
 
         # Update parameters
-        delta = learning_rate * fp
-        param = param - delta
+        delta = fp
+               
+        param = param - learning_rate * delta
 
         # Update loss display
         loss = compute_f(param[0], param[1])
