@@ -19,8 +19,8 @@ def compute_fp(param):
 # Adam optimization
 def adam_optimization(x, y, ax):
     learning_rate = 0.5
-    beta1 = 0.9
-    beta2 = 0.999
+    gamma1 = 0.9
+    gamma2 = 0.999
     epsilon = 1e-8
     num_iterations = 300
 
@@ -39,12 +39,12 @@ def adam_optimization(x, y, ax):
         fp = compute_fp(param)
 
         # Update biased first and second moment estimates
-        m = beta1 * m + (1 - beta1) * fp
-        v = beta2 * v + (1 - beta2) * (fp ** 2)
+        m = gamma1 * m + (1 - gamma1) * fp
+        v = gamma2 * v + (1 - gamma2) * (fp ** 2)
 
         # Correct bias in moments
-        m_hat = m / (1 - beta1 ** iter)
-        v_hat = v / (1 - beta2 ** iter)
+        m_hat = m / (1 - gamma1 ** iter)
+        v_hat = v / (1 - gamma2 ** iter)
 
         # Update parameters
         param = param - learning_rate * m_hat / (np.sqrt(v_hat) + epsilon)
