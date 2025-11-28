@@ -31,6 +31,7 @@ def key_event(event):
     if not optim_started:
         optim_started = True
         fit_sine_curve()
+        optim_started = False
         return
     stop_iteration = True
 
