@@ -1,0 +1,5 @@
+__pycache__/
+dnn/dataset/
+*.pth
+dnn/*.txt
+!dnn/requirements.txt

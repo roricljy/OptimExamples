@@ -8,6 +8,7 @@ import matplotlib.pyplot as plt
 
 # load my optimizers & loss functions
 from user_optim.lion import *
+from user_optim.muon import *
 from user_optim.line_search import *
 from user_loss.focal_loss import *
 
@@ -33,7 +34,7 @@ save_model = False         # save model at each epoch
 save_best = True            # save best model
 show_test_result = True
 
-num_epochs = 2
+num_epochs = 3
 batch_size_trn = 64
 batch_size_val = 1000
 log_frequency = 10
@@ -47,10 +48,11 @@ criterion = nn.CrossEntropyLoss()
 #criterion = FocalLoss(gamma=3.0)       # my loss function
 
 # optimizers
-optimizer = optim.SGD(model.parameters(), lr=0.005, momentum=0.9, dampening=0, weight_decay=1e-5, nesterov=True); opt_name = f'sgd_b{batch_size_trn}'
+optimizer = optim.SGD(model.parameters(), lr=0.006, momentum=0.9, dampening=0, weight_decay=1e-5, nesterov=True); opt_name = f'sgd_b{batch_size_trn}'
 #optimizer = optim.RMSprop(model.parameters(), lr=0.0001, alpha=0.99); opt_name = f'rmsprop_b{batch_size_trn}'
 #optimizer = optim.Adam(model.parameters(), lr=0.001, betas=(0.9, 0.999), weight_decay=1e-5); opt_name = f'adam_b{batch_size_trn}'
 #optimizer = Lion(model.parameters(), lr=0.0002, beta1=0.9, beta2=0.99, gamma=0.1); opt_name = f'lion_b{batch_size_trn}'
+#optimizer = Muon(model.parameters(), lr=0.003, momentum=0.95, weight_decay=0.01, adam_lr=0.001); opt_name = f'muon_b{batch_size_trn}'
 #optimizer = LineSearch(model.parameters(), max_step_size=0.5); opt_name = f'ls_b{batch_size_trn}'   # my optimizer
 
 # learning rate schedular
